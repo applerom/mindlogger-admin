@@ -10,3 +10,4 @@ export * from './SelectRespondentsPopup';
 export * from './ShareAppletPopup';
 export * from './RemoveAccessPopup';
 export * from './ScheduleSetupPopup';
+export * from './ViewDataPopup';
