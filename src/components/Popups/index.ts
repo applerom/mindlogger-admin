@@ -1,4 +1,4 @@
-export * from './EnterAppletPwd';
+export * from './EnterAppletPasswordPopup';
 export * from './Modal';
 export * from './SelectLanguage';
 export * from './DeletePopup';

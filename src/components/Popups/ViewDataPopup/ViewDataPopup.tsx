@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { RefObject, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Modal } from 'components/Popups';
@@ -7,6 +7,7 @@ import { StyledModalWrapper } from 'styles/styledComponents/Modal';
 import { StyledBodyLarge } from 'styles/styledComponents/Typography';
 import theme from 'styles/theme';
 import { AppletPassword } from 'features/AppletPassword';
+import { AppletPasswordRef } from 'features/AppletPassword/AppletPassword.types';
 
 import { ViewDataPopupProps } from './ViewDataPopup.types';
 
@@ -18,9 +19,15 @@ export const ViewDataPopup = ({
   setChosenAppletData,
 }: ViewDataPopupProps) => {
   const { t } = useTranslation('app');
+  const appletPasswordRef = useRef() as RefObject<AppletPasswordRef>;
 
   const [disabledSubmit, setDisabledSubmit] = useState(true);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const submitForm = () => {
+    if (appletPasswordRef?.current) {
+      appletPasswordRef.current.submitForm();
+    }
+  };
 
   const showSecondScreen = !!chosenAppletData;
 
@@ -29,15 +36,11 @@ export const ViewDataPopup = ({
     setPopupVisible(false);
   };
 
-  const handlePopupSubmit = () => {
-    setIsSubmitted(true);
-  };
-
   return (
     <Modal
       open={popupVisible}
       onClose={handlePopupClose}
-      onSubmit={handlePopupSubmit}
+      onSubmit={submitForm}
       title={showSecondScreen ? t('enterAppletPassword') : t('viewData')}
       buttonText={showSecondScreen ? t('submit') : ''}
       disabledSubmit={disabledSubmit}
@@ -46,10 +49,9 @@ export const ViewDataPopup = ({
       <StyledModalWrapper>
         {showSecondScreen ? (
           <AppletPassword
+            ref={appletPasswordRef}
             appletId={chosenAppletData.appletId}
             setDisabledSubmit={setDisabledSubmit}
-            isSubmitted={isSubmitted}
-            setIsSubmitted={setIsSubmitted}
             submitCallback={() => handlePopupClose()}
           />
         ) : (
